@@ -487,3 +487,4 @@ $RECYCLE.BIN/
 #My config json files:
 appsettings.json
 appsettings.Development.json
+Properties/
