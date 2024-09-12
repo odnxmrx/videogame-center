@@ -37,6 +37,20 @@ List<Game> games = new()
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
+//GET All 
 app.MapGet("/games", () => games);
+
+//GET by {id}
+app.MapGet("/games/{id}", (int id) => 
+{
+
+    Game? game = games.Find(game => game.gameId == id); //"?" nullable value
+
+    if(game is null) //validate not null value
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok(game);
+});
 
 app.Run();
