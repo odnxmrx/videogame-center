@@ -40,11 +40,13 @@ List<Game> games = new()
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
+var routeGroup = app.MapGroup("/games"); //Defining map group for routes
+
 //GET All 
-app.MapGet("/games", () => games);
+routeGroup.MapGet("/", () => games);
 
 //GET by {id}
-app.MapGet("/games/{id}", (int id) => 
+routeGroup.MapGet("/{id}", (int id) => 
 {
     Game? game = games.Find(game => game.gameId == id); //"?" nullable value
 
@@ -57,7 +59,7 @@ app.MapGet("/games/{id}", (int id) =>
 .WithName(GetGameEndpointName); //specify a name for our endopoint
 
 //POST new game
-app.MapPost("/games", (Game game) => {
+routeGroup.MapPost("/", (Game game) => {
     game.gameId = games.Max(game => game.gameId) + 1; //assign max id val
     games.Add(game); //Add to list of 'games'
 
@@ -70,7 +72,7 @@ app.MapPost("/games", (Game game) => {
 });
 
 //PUT existing game
-app.MapPut("/games/{givenId}", (int givenId, Game updatedGame) => {
+routeGroup.MapPut("/{givenId}", (int givenId, Game updatedGame) => {
 
     Game? existingGame = games.Find(game => game.gameId == givenId); //"?" nullable value
 
@@ -89,7 +91,7 @@ app.MapPut("/games/{givenId}", (int givenId, Game updatedGame) => {
 });
 
 //DELETE method
-app.MapDelete("/games/{givenId}", (int givenId) => {
+routeGroup.MapDelete("/{givenId}", (int givenId) => {
     Game? givenGame = games.Find(game => game.gameId == givenId); //"?" nullable value
 
     if(givenGame is not null) //validate not null value
