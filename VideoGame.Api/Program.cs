@@ -1,8 +1,6 @@
-
 using VideoGame.Api.Entities;
 
-//const to endpoint definition
-const string GetGameEndpointName = "GetGame";
+const string GetGameEndpointName = "GetGame"; //const to endpoint definition
 
 // In-memory list of games
 List<Game> games = new()
@@ -40,7 +38,8 @@ List<Game> games = new()
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-var routeGroup = app.MapGroup("/games"); //Defining map group for routes
+var routeGroup = app.MapGroup("/games") //Defining map group for routes
+                    .WithParameterValidation(); //from NuGet 'MinimalApis.Extensions'
 
 //GET All 
 routeGroup.MapGet("/", () => games);
