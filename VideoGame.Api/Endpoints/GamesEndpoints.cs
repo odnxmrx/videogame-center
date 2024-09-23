@@ -12,18 +12,16 @@ public static class GamesEndpoints //essential extension method (static)
     public static RouteGroupBuilder MapGamesEndpoints(this IEndpointRouteBuilder routes)
     //'this' to implement this existing Method and extend it, as 'routes'
     {
-
-        InMemGamesRepository repository = new();
-
+        //InMemGamesRepository repository = new();
 
         var routeGroup = routes.MapGroup("/games") //Defining map group for routes
                     .WithParameterValidation(); //from NuGet 'MinimalApis.Extensions'
 
         //GET All 
-        routeGroup.MapGet("/", () => repository.GetAll());
+        routeGroup.MapGet("/", (IGamesRepository repository) => repository.GetAll());
 
         //GET by {id}
-        routeGroup.MapGet("/{id}", (int id) => 
+        routeGroup.MapGet("/{id}", (IGamesRepository repository, int id) => 
         {
             Game? game = repository.Get(id); //games.Find(game => game.gameId == id); //"?" nullable value
 
@@ -32,7 +30,7 @@ public static class GamesEndpoints //essential extension method (static)
         .WithName(GetGameEndpointName); //specify a name for our endopoint
 
         //POST new game
-        routeGroup.MapPost("/", (Game game) => {
+        routeGroup.MapPost("/", (IGamesRepository repository, Game game) => {
             repository.Create(game);
             return Results.CreatedAtRoute(GetGameEndpointName, new {id = game.gameId}, game);
             /*
@@ -43,7 +41,7 @@ public static class GamesEndpoints //essential extension method (static)
         });
 
         //PUT existing game
-        routeGroup.MapPut("/{givenId}", (int givenId, Game updatedGame) => {
+        routeGroup.MapPut("/{givenId}", (IGamesRepository repository, int givenId, Game updatedGame) => {
 
             Game? existingGame = repository.Get(givenId); //games.Find(game => game.gameId == givenId); //"?" nullable value
 
@@ -64,7 +62,7 @@ public static class GamesEndpoints //essential extension method (static)
         });
 
         //DELETE method
-        routeGroup.MapDelete("/{givenId}", (int givenId) => {
+        routeGroup.MapDelete("/{givenId}", (IGamesRepository repository, int givenId) => {
             Game? givenGame = repository.Get(givenId); //games.Find(game => game.gameId == givenId); //"?" nullable value
 
             if(givenGame is not null) //validate not null value

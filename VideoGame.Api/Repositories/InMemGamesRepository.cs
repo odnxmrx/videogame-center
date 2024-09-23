@@ -3,7 +3,7 @@ using VideoGame.Api.Entities;
 
 namespace VideoGame.Api.Repositories;
 
-public class InMemGamesRepository
+public class InMemGamesRepository : IGamesRepository
 {
 
     // In-memory list of games
